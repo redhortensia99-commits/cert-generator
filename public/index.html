@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tạo Chứng Chỉ Chuyên Môn – SKYPEC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <div class="bg-blur"></div>
+  <div class="app">
+
+    <!-- Header -->
+    <header class="header">
+      <div class="logo">
+        <span class="logo-icon">📜</span>
+        <div>
+          <h1>Tạo Chứng Chỉ</h1>
+          <span class="logo-sub">Chuyên Môn Tự Động</span>
+        </div>
+      </div>
+      <span class="badge">SKYPEC</span>
+    </header>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab active" id="tab-templates" onclick="switchTab('templates')">
+        📂 Quản Lý Mẫu
+      </button>
+      <button class="tab" id="tab-generate" onclick="switchTab('generate')">
+        ⚡ Tạo Chứng Chỉ
+      </button>
+    </div>
+
+    <!-- ========== TAB: TEMPLATE MANAGER ========== -->
+    <div id="panel-templates" class="panel">
+
+      <!-- Upload new template -->
+      <div class="card">
+        <div class="card-header">
+          <h2>➕ Thêm Mẫu Chứng Chỉ</h2>
+          <p>Upload file Word (.docx) hoặc Ảnh (.jpg, .png) làm mẫu chứng chỉ</p>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Tên mẫu chứng chỉ</label>
+            <input type="text" id="tpl-name" placeholder="VD: ANKS Định kỳ 2026" />
+          </div>
+          <div class="form-group">
+            <label>File mẫu</label>
+            <div class="file-btn-wrapper">
+              <button class="btn-outline" onclick="document.getElementById('tpl-file').click()">📎 Chọn File</button>
+              <span id="tpl-file-label" class="file-label">Chưa chọn</span>
+              <input type="file" id="tpl-file" accept=".docx,.jpg,.jpeg,.png,.gif,.webp" hidden />
+            </div>
+          </div>
+          <button class="btn-primary" onclick="uploadTemplate()">Tải Lên</button>
+        </div>
+        <div class="note">
+          💡 <strong>Word (.docx)</strong>: dùng placeholder <code>{ho_ten}</code>, <code>{ket_qua}</code>... cho text,
+          <code>{%anh_the}</code> cho ảnh. &nbsp;|&nbsp;
+          <strong>Ảnh (.jpg/.png)</strong>: sau khi upload, nhấn <em>"Cài đặt vị trí"</em> để kéo thả các trường dữ liệu
+          lên ảnh.
+        </div>
+      </div>
+
+      <!-- Template list -->
+      <div class="card">
+        <div class="card-header">
+          <h2>📋 Danh Sách Mẫu</h2>
+          <p>Các mẫu chứng chỉ đã được lưu</p>
+        </div>
+        <div id="tpl-list">
+          <div class="empty-state">🔍 Đang tải...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== TAB: GENERATE ========== -->
+    <div id="panel-generate" class="panel hidden">
+      <div class="card" id="gen-upload-card">
+        <div class="card-header">
+          <h2>⚡ Tạo Chứng Chỉ</h2>
+          <p>Chọn mẫu và upload file Excel danh sách học viên</p>
+        </div>
+
+        <div class="form-group" style="margin-bottom:20px">
+          <label>Mẫu chứng chỉ</label>
+          <select id="gen-template-select">
+            <option value="">-- Chọn mẫu chứng chỉ --</option>
+          </select>
+        </div>
+
+        <div class="upload-zone" id="excel-zone" onclick="document.getElementById('excel-input').click()">
+          <input type="file" id="excel-input" accept=".xlsx,.xls" hidden />
+          <div class="upload-icon">📊</div>
+          <h3>File Excel Danh Sách Học Viên</h3>
+          <p>Kéo thả hoặc click để chọn file .xlsx</p>
+          <div class="file-selected" id="excel-filename">Chưa chọn file</div>
+        </div>
+
+        <button class="btn-generate" id="btn-generate" disabled onclick="generateCertificates()">
+          <span>⚡</span> Tạo Chứng Chỉ
+        </button>
+      </div>
+
+      <div class="card hidden" id="gen-progress-card">
+        <div class="card-header">
+          <h2>⚙️ Đang Xử Lý...</h2>
+          <p id="progress-msg">Đang đọc danh sách học viên...</p>
+        </div>
+        <div class="progress-wrap">
+          <div class="progress-bar">
+            <div class="progress-fill" id="progress-fill"></div>
+          </div>
+          <span id="progress-pct">0%</span>
+        </div>
+        <div class="loading-dots"><span></span><span></span><span></span></div>
+      </div>
+
+      <div class="card hidden" id="gen-success-card">
+        <div class="success-icon">✅</div>
+        <h2 style="color:var(--success)">Tạo Thành Công!</h2>
+        <p id="success-msg"></p>
+        <div class="success-actions">
+          <button class="btn-download" onclick="downloadFile()">⬇️ Tải Xuống Word</button>
+          <button class="btn-outline" onclick="resetGenerate()">🔄 Tạo Lại</button>
+        </div>
+      </div>
+
+      <div class="card hidden" id="gen-error-card">
+        <div class="success-icon">❌</div>
+        <h2 style="color:var(--danger)">Có Lỗi Xảy Ra</h2>
+        <p id="error-msg" class="error-msg"></p>
+        <button class="btn-outline" onclick="resetGenerate()">🔄 Thử Lại</button>
+      </div>
+    </div>
+
+    <!-- ========== MODAL: Field Placement ========== -->
+    <div class="modal-overlay hidden" id="field-modal">
+      <div class="modal">
+        <div class="modal-header">
+          <h2>🎯 Cài Đặt Vị Trí Các Trường</h2>
+          <button class="modal-close" onclick="closeFieldModal()">✕</button>
+        </div>
+        <p class="modal-hint">Chọn trường → Click/kéo lên ảnh chứng chỉ để xác định vị trí. Nhấn <strong>Lưu</strong>
+          khi xong.</p>
+
+        <div class="modal-body">
+          <!-- Left: field controls -->
+          <div class="field-controls">
+            <div class="field-section-title">Chọn trường để đặt:</div>
+            <div class="field-btns" id="field-btns"></div>
+            <hr style="border-color:var(--border);margin:12px 0" />
+            <div class="field-section-title">Đã đặt:</div>
+            <div id="placed-fields-list"></div>
+            <div style="margin-top:12px">
+              <label style="font-size:0.78rem;color:var(--text-muted)">Cỡ chữ (pt):</label>
+              <input type="number" id="field-fontsize" value="11" min="6" max="72" style="width:70px;margin-left:8px" />
+              <label style="margin-left:10px"><input type="checkbox" id="field-bold" /> In đậm</label>
+            </div>
+          </div>
+
+          <!-- Right: image canvas -->
+          <div class="canvas-wrap">
+            <div class="canvas-container" id="canvas-container">
+              <img id="tpl-preview-img" src="" alt="Template preview" />
+              <div id="field-markers"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn-outline" onclick="closeFieldModal()">Huỷ</button>
+          <button class="btn-primary" onclick="saveFieldLayout()">💾 Lưu Cài Đặt</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,25 @@
+{
+  "name": "cert-generator",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "docxtemplater": "^3.68.2",
+    "docxtemplater-image-module-free": "^1.1.1",
+    "express": "^5.2.1",
+    "image-size": "^2.0.2",
+    "multer": "^2.0.2",
+    "pizzip": "^3.2.0",
+    "uuid": "^13.0.0",
+    "xlsx": "^0.18.5"
+  }
+}

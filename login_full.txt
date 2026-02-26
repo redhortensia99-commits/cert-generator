@@ -1,0 +1,5 @@
+﻿node : Cannot login in non-interactive mode
+    + CategoryInfo          : NotSpecified: (Cannot login in non-interactive m 
+   ode:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
