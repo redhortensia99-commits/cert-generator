@@ -16,6 +16,7 @@
     "docxtemplater": "^3.68.2",
     "docxtemplater-image-module-free": "^1.1.1",
     "express": "^5.2.1",
+    "express-session": "^1.19.0",
     "image-size": "^2.0.2",
     "multer": "^2.0.2",
     "pizzip": "^3.2.0",

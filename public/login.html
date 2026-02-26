@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Đăng Nhập – SKYPEC Chứng Chỉ</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet" />
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg: #0d0f1a;
+            --surface: #141725;
+            --border: #1e2235;
+            --accent: #6c63ff;
+            --text: #e8eaf6;
+            --text-m: #9ba3c4;
+            --danger: #ff5b7a;
+            --radius: 14px;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .bg-blur {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background:
+                radial-gradient(ellipse 60% 40% at 20% 20%, rgba(108, 99, 255, .18) 0%, transparent 60%),
+                radial-gradient(ellipse 50% 50% at 80% 80%, rgba(0, 200, 150, .10) 0%, transparent 60%);
+        }
+
+        .login-card {
+            position: relative;
+            z-index: 1;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 48px 40px 40px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 24px 80px rgba(0, 0, 0, .5);
+            animation: slideUp .4s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(24px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo-wrap {
+            text-align: center;
+            margin-bottom: 36px;
+        }
+
+        .logo-icon {
+            font-size: 3rem;
+            display: block;
+            margin-bottom: 12px;
+        }
+
+        .logo-wrap h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #a78bfa, #6c63ff, #38bdf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .logo-wrap p {
+            color: var(--text-m);
+            font-size: .85rem;
+            margin-top: 4px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            font-size: .82rem;
+            font-weight: 600;
+            color: var(--text-m);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            background: rgba(255, 255, 255, .04);
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius);
+            color: var(--text);
+            font-size: 1rem;
+            font-family: inherit;
+            padding: 12px 16px;
+            outline: none;
+            transition: border-color .2s, box-shadow .2s;
+        }
+
+        input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(108, 99, 255, .18);
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--accent), #5b54e8);
+            color: #fff;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 1rem;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            letter-spacing: .03em;
+            margin-top: 8px;
+            transition: opacity .2s, transform .15s;
+        }
+
+        .btn-login:hover {
+            opacity: .9;
+            transform: translateY(-1px);
+        }
+
+        .btn-login:active {
+            transform: translateY(0);
+        }
+
+        .error-box {
+            background: rgba(255, 91, 122, .1);
+            border: 1px solid rgba(255, 91, 122, .3);
+            border-radius: var(--radius);
+            color: var(--danger);
+            padding: 10px 14px;
+            font-size: .85rem;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .footer-note {
+            text-align: center;
+            font-size: .75rem;
+            color: var(--text-m);
+            margin-top: 24px;
+            opacity: .6;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-blur"></div>
+    <div class="login-card">
+        <div class="logo-wrap">
+            <span class="logo-icon">📜</span>
+            <h1>SKYPEC Chứng Chỉ</h1>
+            <p>Hệ thống tạo chứng chỉ chuyên môn tự động</p>
+        </div>
+
+        <div class="error-box" id="error-box" style="display:none">❌ Sai tên đăng nhập hoặc mật khẩu</div>
+
+        <form method="POST" action="/login">
+            <div class="form-group">
+                <label>Tên đăng nhập</label>
+                <input type="text" name="username" id="username" placeholder="Nhập tên đăng nhập" required
+                    autocomplete="username" />
+            </div>
+            <div class="form-group">
+                <label>Mật khẩu</label>
+                <input type="password" name="password" placeholder="Nhập mật khẩu" required
+                    autocomplete="current-password" />
+            </div>
+            <button type="submit" class="btn-login">🔐 Đăng Nhập</button>
+        </form>
+
+        <p class="footer-note">SKYPEC © 2026 – Hệ thống nội bộ</p>
+    </div>
+
+    <script>
+        // Show error if redirected from failed login
+        if (new URLSearchParams(window.location.search).get('error')) {
+            document.getElementById('error-box').style.display = 'block';
+        }
+    </script>
+</body>
+
+</html>

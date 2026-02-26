@@ -281,14 +281,28 @@ async function saveFieldLayout() {
 // ==================== GENERATE ====================
 function setupExcelDrop() {
     const zone = document.getElementById('excel-zone');
+    const input = document.getElementById('excel-input');
+
+    // Click on zone to open file picker (only if not clicking btn-generate)
+    zone.addEventListener('click', (e) => {
+        // Don't open file picker if user clicked the generate button
+        if (e.target.id === 'btn-generate' || e.target.closest('#btn-generate')) return;
+        input.click();
+    });
+
     zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
     zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
     zone.addEventListener('drop', e => {
         e.preventDefault(); zone.classList.remove('drag-over');
         const f = e.dataTransfer.files[0];
-        if (f) setExcelFile(f);
+        if (f && (f.name.endsWith('.xlsx') || f.name.endsWith('.xls'))) {
+            setExcelFile(f);
+        } else if (f) {
+            alert('Vui lòng chọn file Excel (.xlsx hoặc .xls)');
+        }
     });
-    document.getElementById('excel-input').addEventListener('change', e => {
+
+    input.addEventListener('change', e => {
         if (e.target.files[0]) setExcelFile(e.target.files[0]);
     });
 }
